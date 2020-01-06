@@ -13,3 +13,16 @@ POST http://localhost:8080/getuser?id=99&name=国产
 Content-Type: application/json
 
 ###
+POST http://localhost:8080/getuser
+Content-Type: application/json
+
+{
+  "id": 99,
+  "name": "国产"
+}
+
+###
+POST http://localhost:8080/date?date=2020-01-01 10:10:10
+Content-Type: application/json
+
+###
