@@ -14,13 +14,14 @@ public class CharEncodingInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         request.setCharacterEncoding("utf-8");
+
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        System.out.println("postHandle");
-        super.postHandle(request, response, handler, modelAndView);
+//        System.out.println("postHandle");
+//        super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override

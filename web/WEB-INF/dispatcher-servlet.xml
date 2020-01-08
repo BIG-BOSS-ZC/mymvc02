@@ -18,7 +18,13 @@
             <mvc:mapping path="/**"/>
             <bean id="charEncodingInterceptor" class="com.bailiban.intercepter.CharEncodingInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/user/**"/>
+            <bean id="userLoginInterceptor" class="com.bailiban.intercepter.UserLoginInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
+
+    <mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>
 
     <bean id="conversionService2" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
@@ -26,6 +32,11 @@
                 <bean class="com.bailiban.convecter.StringDateConverter"></bean>
             </set>
         </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="prefix" value="/WEB-INF/pages/jsps/" />
+        <property name="suffix" value=".jsp" />
     </bean>
 
 

@@ -24,7 +24,7 @@ public class ServerNioHttp {
     //参数名，参数值。例如 /hello?id=1  key="id",value="1"
     public static Map<String,String> paraMap=new HashMap<String, String>();
     //模拟的IOC容器
-    public static Map<String,Object> beanMap=new HashMap<>();
+    public static Map<String,Object> beanMap=new HashMap<String,Object>();
 
     static {
         //扫描包，初始化IOC容器

@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <mvc:annotation-driven>
+    <mvc:annotation-driven conversion-service="conversionService2">
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <property name="defaultCharset" value="utf-8" />
@@ -18,7 +18,26 @@
             <mvc:mapping path="/**"/>
             <bean id="charEncodingInterceptor" class="com.bailiban.intercepter.CharEncodingInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/user/**"/>
+            <bean id="userLoginInterceptor" class="com.bailiban.intercepter.UserLoginInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
+
+    <mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>
+
+    <bean id="conversionService2" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.bailiban.convecter.StringDateConverter"></bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="prefix" value="/WEB-INF/pages/jsps/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
 
 
     <context:component-scan base-package="com.bailiban" />
