@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bailiban.mybatis.AdviceMapper">
+    <!--<select id="getMyAdvices" resultType="com.bailiban.model.MyAdvice">
+        select * from advice
+        <where>
+            <if test="name!=null">
+                name=#{name}
+            </if>
+            <if test="money!=null">
+                money >= #{money}
+            </if>
+            <if test="id!=null">
+                id=#{id}
+            </if>
+        </where>
+    </select>-->
+    <select id="getMyAdvices" resultType="com.bailiban.model.MyAdvice">
+        select * from advice
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="name!=null">
+                name=#{name}
+            </if>
+            <if test="money!=null">
+                or money >= #{money}
+            </if>
+            <if test="uId!=null">
+                and u_id=#{uId}
+            </if>
+        </trim>
+    </select>
+    <update id="updateAdvice">
+        update advice set money=money+#{money} where id=#{id};
+    </update>
+</mapper>

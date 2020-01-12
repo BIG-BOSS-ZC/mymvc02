@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bailiban.mybatis.UserMapper">
+    <resultMap id="myUser" type="com.bailiban.model.User2">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <association property="myAdvice" autoMapping="true">
+            <result property="name" column="aname"/>
+            <result property="uId" column="u_id"/>
+        </association>
+        <collection property="advices" ofType="com.bailiban.model.MyAdvice">
+            <result property="name" column="aname"/>
+            <result property="uId" column="u_id"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="getUser" resultMap="myUser">
+        select u.*,a.name aname,a.money,a.`describe`,a.u_id  from user u join advice a on u.id=a.id where u.id = #{id}
+    </select>
+    <insert id="addUsers">
+        insert into user (name) values
+        <foreach collection="list" item="user" separator=",">
+            (#{user.name})
+        </foreach>
+    </insert>
+
+    <insert id="insertUser">
+        insert into user (id,name) values (#{id},#{name})
+  </insert>
+    <update id="updateUser">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null">
+                name =#{name},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+    <delete id="delUser">
+        delete from user where id=#{id}
+    </delete>
+</mapper>

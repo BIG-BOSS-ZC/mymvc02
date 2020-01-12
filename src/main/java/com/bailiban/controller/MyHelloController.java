@@ -14,7 +14,7 @@ public class MyHelloController {
     }
 
     @MyRequestMapping("/hello")
-    public String getUserById(int id){
+    public String getUseryId(int id){
         for(User u:list){
             if(u.getId()==id){
                 return u.toString();

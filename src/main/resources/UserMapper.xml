@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bailiban.dao.UserDao">
+    <select id="getUser" resultType="com.bailiban.model.User">
+    select * from userinfo
+    <where>
+        <if test="name!=null and password!=null">
+            name=#{name} and password=#{password}
+        </if>
+        <if test="id!=null">
+            id=#{id}
+        </if>
+    </where>
+  </select>
+
+    <update id="updateUser">
+        UPDATE `test`.`userinfo` t
+        SET t.`phone_number` = #{phoneNumber}
+            , t.`email` = #{email}
+            ,t.`password`= #{password}
+            ,t.`sex`=#{sex}
+            ,t.`hobbit`=#{hobbit}
+            ,t.`birthday`=#{birthday}
+        WHERE t.`id` = 1
+    </update>
+    <!--<insert id="addUsers">
+        insert into user (name) values
+        <foreach collection="list" item="user" separator=",">
+            (#{user.name})
+        </foreach>
+    </insert>
+
+    <insert id="insertUser">
+        insert into user (id,name) values (#{id},#{name})
+  </insert>
+    <update id="updateUser">
+        update user set name =#{name} where id=#{id}
+    </update>
+    <delete id="delUser">
+        delete from user where id=#{id}
+    </delete>-->
+</mapper>

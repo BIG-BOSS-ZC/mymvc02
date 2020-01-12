@@ -20,7 +20,7 @@ public class UploadController {
 
     @GetMapping("/upload")
     public String upload(){
-        return "upload";
+        return "upload2";
     }
 
     @PostMapping("/upload")
@@ -30,9 +30,10 @@ public class UploadController {
         //1.文件名处理，避免与本地重复
         String theName="";
         String originalFilename = uploadFile.getOriginalFilename();
+        System.out.println(originalFilename);
         String type=originalFilename.substring(originalFilename.lastIndexOf("."));
         String uuid= UUID.randomUUID().toString();
-        if(fileName==null){
+        if(fileName.equals("")){
             theName=uuid+"_"+originalFilename;
         }else {
             theName=fileName+"_"+uuid+type;
@@ -54,8 +55,8 @@ public class UploadController {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
-            return "upload failed.";
+            return "failed.";
         }
-        return "upload success.";
+        return "success.";
     }
 }

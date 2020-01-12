@@ -1,12 +1,16 @@
 package com.bailiban.controller;
 
+import com.bailiban.model.MyAdvice;
 import com.bailiban.model.User;
+import com.bailiban.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -15,32 +19,27 @@ import java.util.*;
 @RequestMapping("/user")
 public class UserController {
 
-    private static Map<Integer,User> userMap=new HashMap<Integer,User>();
-    static {
-        userMap.put(1,new User(1,"one一"));
-        userMap.put(2,new User(2,"two二"));
-        userMap.put(3,new User(3,"three三"));
-    }
+    @Autowired
+    private UserService userService;
 
-    @RequestMapping("login")
+    @PostMapping("login")
     public String login(User user, HttpSession session){
         System.out.println("[login form]\t"+user.toString());
-        if(user.getName()!=null){
-            Iterator<User> iterator = userMap.values().iterator();
-            while (iterator.hasNext()){
-                User u=iterator.next();
-                if(u.getName().equals(user.getName())
-                        && u.getPassword().equals(user.getPassword())){
-                    System.out.println("[login user]\t"+u.toString());
-                    session.setAttribute("user",u);
-                    return "redirect:/user/home";
-                }
-            }
+        User login = userService.login(user.getName(), user.getPassword());
+        if(login!=null){
+            session.setAttribute("user",login);
+            System.out.println("[login user]\t"+login.toString());
+            return "redirect:home";
         }
         return "login";
     }
 
-    /*@RequestMapping("home")
+    @GetMapping("login")
+    public String login(){
+        return "login";
+    }
+
+@RequestMapping("home")
     public String home(HttpSession session,ModelMap modelMap){
         if(session.getAttribute("user")==null){
             //没有登录
@@ -48,17 +47,20 @@ public class UserController {
         }
         modelMap.addAttribute(session.getAttribute("user"));
         return "home";
-    }*/
+    }
+
 
     //有拦截器了，简化了方法
     @RequestMapping("home")
-    public String home(/*@SessionAttribute  User user*/){
+    public String home(
+@SessionAttribute  User user
+){
         return "home";
     }
 
-    /*	@RequestMapping("login")
+	@RequestMapping("login")
     public String login(User user, RedirectAttributes redirectAttributes){
-        System.out.println(user.toString());
+        /*System.out.println(user.toString());
         if(user.getId()!=null){
             User user1=userMap.get(user.getId());
             if(user.getName().equals(user1.getName())){
@@ -66,31 +68,35 @@ public class UserController {
                 redirectAttributes.addFlashAttribute("user",user1);
                 return "redirect:home";
             }
-        }
+        }*/
         return "login";
-    }*/
+    }
 
-    /*@RequestMapping("home2")
+
+@RequestMapping("home2")
     public String home2(@SessionAttribute User user,HttpSession session,ModelMap model){
         user=(User) session.getAttribute("user");//从session里取得属性值
         model.addAttribute(user);//用ModelMap将属性值传到页面
         return "home";
-    }*/
+    }
+
 
     @GetMapping("update")
-    public String update(/*@SessionAttribute User user*/){
+    public String update(
+@SessionAttribute User user
+){
         return "update";
     }
 
     @PostMapping("update")
     public String update(User user,HttpSession session){
         System.out.println("[update]\t"+user.toString());
-        if(user.getId().equals(userMap.get(user.getId()).getId())){
-            userMap.remove(user.getId());
-            userMap.put(user.getId(),user);
+        int i = userService.updateUser(user);
+        if(i!=0){
             session.setAttribute("user",user);
+            return "redirect:/user/home";
         }
-        return "redirect:/user/home";
+        return "errors/error";
     }
 
     @RequestMapping("logout")
@@ -106,10 +112,10 @@ public class UserController {
 
     @PostMapping("register")
     public String register(@Validated User user, RedirectAttributes redirectAttributes){
-        /*Boolean flag=true;
-        StringBuilder error=new StringBuilder();
+Boolean flag=true;
+StringBuilder error=new StringBuilder();
 
-        Iterator<User> iterator = userMap.values().iterator();
+        /*Iterator<User> iterator = userMap.values().iterator();
         while (iterator.hasNext()){
             User u=iterator.next();
             if(u.getName().equals(user.getName())){
@@ -141,18 +147,68 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error",error.toString());
             redirectAttributes.addFlashAttribute("display","block");
             return "redirect:/user/register";
-        }*/
-        /*Set<Integer> integers = userMap.keySet();
+        }
+
+Set<Integer> integers = userMap.keySet();
         int max=-1;
         for(Integer num:integers){
             if(max<num){
                 max=num;
             }
         }*/
-        int id=userMap.size()+1;
+
+
+        /*int id=userMap.size()+1;
         user.setId(id);
         userMap.put(id,user);
-        System.out.println("[register]\t"+user.toString());
+        System.out.println("[register]\t"+user.toString());*/
         return "redirect:/user/login";
+    }
+
+    @RequestMapping("table")
+    @ResponseBody
+    public Map<String,Object> table(int page,int limit){
+        Map<String,Object> map=new HashMap<>();
+        /*map.put("code",0);
+        map.put("count",advices.size());
+        map.put("data",advices.subList((page-1)*limit,Math.min(advices.size()-1,page*limit)));*/
+        return map;
+    }
+
+    @RequestMapping("table/edit")
+    @ResponseBody
+    public String edit(MyAdvice e){
+        /*advices.stream().anyMatch(eq->{
+            if (e.getId()==eq.getId()) {
+                eq.setName(e.getName());
+                eq.setDescribe(e.getDescribe());
+                eq.setMoney(e.getMoney());
+                return true;
+            }
+            return false;
+        });*/
+        return "success";
+    }
+
+    @RequestMapping("table/del")
+    @ResponseBody
+    public String del(MyAdvice e){
+        /*advices.stream().anyMatch(eq->{
+            if (e.getId()==eq.getId()) {
+                advices.remove(eq);
+                return true;
+            }
+            return false;
+        });*/
+        return "success";
+    }
+
+    @RequestMapping("table/add")
+    @ResponseBody
+    public String add(MyAdvice myAdvice){
+        /*System.out.println("?????");
+        myAdvice.setId(advices.size()+1);
+        advices.add(myAdvice);*/
+        return "success";
     }
 }
