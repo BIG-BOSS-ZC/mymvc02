@@ -16,9 +16,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class GetMapper {
-    @Bean("userDao")
+//    @Bean("userDao")
     public UserDao getMapper() throws IOException {
         //        获取配置文件
         String resource = "mybatis-config.xml";
@@ -43,12 +43,23 @@ public class GetMapper {
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory =
                 new SqlSessionFactoryBuilder().build(inputStream);
-
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+        User2 user0;
+        User2 user3;
+        try (SqlSession session = sqlSessionFactory.openSession(false)) {
             UserMapper userDao = session.getMapper(UserMapper.class);
-            User2 user = userDao.getUser2(1);
-            System.out.println(user.toString());
+            user0 = userDao.getUser2(1);
+            System.out.println(user0.toString());
+            User2 user1 = userDao.getUser2(1);
+            System.out.println(user1.toString());
+            System.out.println(user0==user1);
         }
+
+        try (SqlSession session = sqlSessionFactory.openSession(false)) {
+            UserMapper userDao = session.getMapper(UserMapper.class);
+            user3 = userDao.getUser2(1);
+        }
+
+        System.out.println(user0==user3);
         /*String resource = "com/bailiban/mybatis/mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory =

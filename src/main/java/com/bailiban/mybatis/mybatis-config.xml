@@ -6,6 +6,8 @@
     <properties resource="com/bailiban/mybatis/jdbc.properties"></properties>
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <setting name="cacheEnabled" value="true"/>
     </settings>
 <!--    <typeAliases>-->
         <!--        给类娶一个别名，短一点好写-->

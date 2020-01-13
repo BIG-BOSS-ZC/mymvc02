@@ -5,14 +5,15 @@
 <mapper namespace="com.bailiban.dao.UserDao">
     <select id="getUser" resultType="com.bailiban.model.User">
     select * from userinfo
-    <where>
-        <if test="name!=null and password!=null">
-            name=#{name} and password=#{password}
+    <trim prefix="where" prefixOverrides="and">
+        <if test="user.id!=null">
+            id=#{user.id}
         </if>
-        <if test="id!=null">
-            id=#{id}
+        <if test="user.name!=null and user.password!=null">
+            and name=#{user.name} and password=#{user.password}
         </if>
-    </where>
+    </trim>
+
   </select>
 
     <update id="updateUser">
@@ -23,22 +24,7 @@
             ,t.`sex`=#{sex}
             ,t.`hobbit`=#{hobbit}
             ,t.`birthday`=#{birthday}
+            ,t.`name`=#{name}
         WHERE t.`id` = 1
     </update>
-    <!--<insert id="addUsers">
-        insert into user (name) values
-        <foreach collection="list" item="user" separator=",">
-            (#{user.name})
-        </foreach>
-    </insert>
-
-    <insert id="insertUser">
-        insert into user (id,name) values (#{id},#{name})
-  </insert>
-    <update id="updateUser">
-        update user set name =#{name} where id=#{id}
-    </update>
-    <delete id="delUser">
-        delete from user where id=#{id}
-    </delete>-->
 </mapper>

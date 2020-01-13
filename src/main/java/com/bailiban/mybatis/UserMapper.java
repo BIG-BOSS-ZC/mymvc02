@@ -11,6 +11,7 @@ public interface UserMapper {
     int insertUser(User2 user);
     int updateUser(User2 user);
     int delUser(int id);
+
     @Results(id = "iUser",value = {
             @Result(column = "id",property = "id",id = true),
             @Result(column = "name",property = "name"),

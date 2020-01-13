@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 public class MyAdvice {
     private String name;
     private Double money;
-    private String describe;
+    private String miaoshu;
     private Integer id;
     private Integer uId;
 }

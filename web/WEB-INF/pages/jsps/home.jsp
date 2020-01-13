@@ -61,7 +61,6 @@
         //第一个实例
         table.render({
             elem: '#mytb'
-            ,height: 312
             ,method: "post"
             ,url: '/user/table' //数据接口
             ,page: true//开启分页
@@ -74,7 +73,7 @@
             ,cols: [[
                 {field: 'name', title: '名称', width:200}
                 ,{field: 'money', title: '价格', width:200, sort: true}
-                ,{field: 'describe', title: '描述', width:200}
+                ,{field: 'miaoshu', title: '描述', width:200}
                 ,{field: 'id', title: 'id', width:200, sort: true}
                 ,{title: '操作',fixed: 'right',toolbar: '#barDemo', width:200} //这里的toolbar值是模板元素的选择器
             ]],
@@ -93,7 +92,7 @@
                     isAdd = true;
                     break;
                 case 'reload':
-                    table.reload('demo', {
+                    table.reload('mytb', {
                         url: '/user/table'
                         ,where: {} //设定异步数据接口的额外参数
                     });
@@ -133,7 +132,7 @@
                 //do something
                 $('#e_name').val(data.name);
                 $('#e_money').val(data.money);
-                $('#e_describe').val(data.describe);
+                $('#e_describe').val(data.miaoshu);
                 $('#e_id').text(data.id);
                 layer.open({
                     type: 1,
@@ -143,7 +142,7 @@
                         obj.update({
                             name:$('#e_name').val(),
                             money:$('#e_money').val(),
-                            describe:$('#e_describe').val()
+                            miaoshu:$('#e_describe').val()
                         });
                     }
                 });
@@ -160,9 +159,12 @@
         $.ajax({
             url: isAdd ? "/user/table/add" : "/user/table/edit",
             type: "post",
-            data: {name: $("#e_name").val(),
-            money:$("#e_money").val(),describe: $('#e_describe').val()}
-            ,
+            data: {
+                name: $("#e_name").val(),
+                money:$("#e_money").val(),
+                miaoshu: $('#e_describe').val(),
+                id: $('#e_id').text()
+            },
             success: (data) => {
                 if (isAdd) {
                     elems.table.reload('mytb', {
@@ -223,14 +225,8 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="layui-input-block">
-                <div class="layui-form-item">
-                    <div class="layui-input-block" id="e_save">
-                        <input type="button" class="layui-btn" onclick="save()" value="保存">
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                    </div>
-                </div>
-
+            <div class="layui-input-block" id="e_save">
+                <input type="button" class="layui-btn" onclick="save()" value="保存">
             </div>
         </div>
     </form>

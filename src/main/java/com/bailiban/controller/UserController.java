@@ -39,7 +39,7 @@ public class UserController {
         return "login";
     }
 
-@RequestMapping("home")
+    @RequestMapping("home")
     public String home(HttpSession session,ModelMap modelMap){
         if(session.getAttribute("user")==null){
             //没有登录
@@ -51,14 +51,12 @@ public class UserController {
 
 
     //有拦截器了，简化了方法
-    @RequestMapping("home")
-    public String home(
-@SessionAttribute  User user
-){
+//    @RequestMapping("home")
+    public String home(@SessionAttribute  User user){
         return "home";
     }
 
-	@RequestMapping("login")
+//	@RequestMapping("login")
     public String login(User user, RedirectAttributes redirectAttributes){
         /*System.out.println(user.toString());
         if(user.getId()!=null){
@@ -73,7 +71,7 @@ public class UserController {
     }
 
 
-@RequestMapping("home2")
+//    @RequestMapping("home2")
     public String home2(@SessionAttribute User user,HttpSession session,ModelMap model){
         user=(User) session.getAttribute("user");//从session里取得属性值
         model.addAttribute(user);//用ModelMap将属性值传到页面
@@ -82,9 +80,7 @@ public class UserController {
 
 
     @GetMapping("update")
-    public String update(
-@SessionAttribute User user
-){
+    public String update(@SessionAttribute User user){
         return "update";
     }
 
@@ -112,10 +108,10 @@ public class UserController {
 
     @PostMapping("register")
     public String register(@Validated User user, RedirectAttributes redirectAttributes){
-Boolean flag=true;
+        /*Boolean flag=true;
 StringBuilder error=new StringBuilder();
 
-        /*Iterator<User> iterator = userMap.values().iterator();
+        Iterator<User> iterator = userMap.values().iterator();
         while (iterator.hasNext()){
             User u=iterator.next();
             if(u.getName().equals(user.getName())){
@@ -156,8 +152,7 @@ Set<Integer> integers = userMap.keySet();
                 max=num;
             }
         }*/
-
-
+        userService.addUser(user);
         /*int id=userMap.size()+1;
         user.setId(id);
         userMap.put(id,user);
@@ -167,18 +162,20 @@ Set<Integer> integers = userMap.keySet();
 
     @RequestMapping("table")
     @ResponseBody
-    public Map<String,Object> table(int page,int limit){
+    public Map<String,Object> table(@SessionAttribute User user,int page,int limit){
         Map<String,Object> map=new HashMap<>();
-        /*map.put("code",0);
+        List<MyAdvice> advices = userService.getAdvices(user.getId());
+        map.put("code",0);
         map.put("count",advices.size());
-        map.put("data",advices.subList((page-1)*limit,Math.min(advices.size()-1,page*limit)));*/
+        map.put("data",advices.subList((page-1)*limit,Math.min(advices.size(),page*limit)));
         return map;
     }
 
     @RequestMapping("table/edit")
     @ResponseBody
     public String edit(MyAdvice e){
-        /*advices.stream().anyMatch(eq->{
+        /*
+        advices.stream().anyMatch(eq->{
             if (e.getId()==eq.getId()) {
                 eq.setName(e.getName());
                 eq.setDescribe(e.getDescribe());
@@ -186,13 +183,15 @@ Set<Integer> integers = userMap.keySet();
                 return true;
             }
             return false;
-        });*/
+        });
+        */
+        userService.updateAdvice(e);
         return "success";
     }
 
     @RequestMapping("table/del")
     @ResponseBody
-    public String del(MyAdvice e){
+    public String del(int id){
         /*advices.stream().anyMatch(eq->{
             if (e.getId()==eq.getId()) {
                 advices.remove(eq);
@@ -200,15 +199,19 @@ Set<Integer> integers = userMap.keySet();
             }
             return false;
         });*/
+        userService.delAdvice(id);
         return "success";
     }
 
     @RequestMapping("table/add")
     @ResponseBody
-    public String add(MyAdvice myAdvice){
+    public String add(MyAdvice myAdvice,HttpSession session){
         /*System.out.println("?????");
         myAdvice.setId(advices.size()+1);
         advices.add(myAdvice);*/
+        User user=(User)session.getAttribute("user");
+        myAdvice.setUId(user.getId());
+        userService.addAdvice(myAdvice);
         return "success";
     }
 }

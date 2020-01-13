@@ -31,8 +31,8 @@ public class User {
     @Email(message = "邮箱格式不正确！")
     private String email;
     private String hobbit;
-    /*@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private Date birthday;*/
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    private Date birthday;
 
     public User(Integer id,@NotEmpty(message = "用户名不能为空！") String name, @Size(min = 6, max = 18, message = "密码长度应该在6-18之间！") String password) {
         this.id=id;

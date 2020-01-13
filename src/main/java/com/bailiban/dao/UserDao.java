@@ -1,14 +1,32 @@
 package com.bailiban.dao;
 
+import com.bailiban.model.MyAdvice;
 import com.bailiban.model.User;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
+@Mapper
 public interface UserDao {
 
-    User getUser(@Param("user") User user);
+    User getUser(User user);
 
-    int updateUser(@Param("user") User user);
+    int updateUser(User user);
 
-    int addUser(@Param("user") User user);
 
+    @Insert("insert into userinfo(name,password,sex,phone_number,email,hobbit,birthday) values(#{name},#{password},#{sex},#{phoneNumber},#{email},#{hobbit},#{birthday})")
+    int addUser(User user);
+
+
+    @Select("select * from advice where u_id=#{uId}")
+    List<MyAdvice> getAdvices(int uId);
+
+    @Update("update advice set name=#{name},money=#{money},miaoshu=#{miaoshu} where id=#{id}")
+    int updateAdvice(MyAdvice myAdvice);
+
+    @Insert("insert into advice(name,money,miaoshu,u_id) values(#{name},#{money},#{miaoshu},#{uId})")
+    int addAdvice(MyAdvice myAdvice);
+
+    @Delete("delete from advice where id=#{id}")
+    int delAdvice(int id);
 }
